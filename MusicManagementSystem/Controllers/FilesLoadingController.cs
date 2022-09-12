@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using MusicManagementSystem.ViewModels.FileLoading;
 
 namespace MusicManagementSystem.Controllers
 {
@@ -11,22 +12,32 @@ namespace MusicManagementSystem.Controllers
         {
             _logger = logger;
         }
-        public IActionResult Index(IFormFile[] files)
+        public IActionResult Index()
         {
-            foreach (var file in files)
+            return View();
+        }
+
+        public IActionResult UploadMusic(FileUploadViewModel fileUploadViewModel)
+        {
+            if (ModelState.IsValid)
             {
-                _logger.LogInformation("Uploaded file {filename}", file.FileName);
-                string untrustedFileName = Path.GetFileName(file.FileName);
-                using (var stream = file.OpenReadStream())
+                foreach (var file in fileUploadViewModel.FormFileCollection)
                 {
-                    var tfile = TagLib.File.Create(new FileAbstraction(untrustedFileName, stream));
-                    foreach (var tag in tfile.Tag.GetType().GetProperties().Where(p => p.GetGetMethod() != null))
+                    _logger.LogInformation("Uploaded file {filename}", file.FileName);
+                    _logger.LogInformation("SIZE {length}", file.Length / 1_048_576);
+                    string untrustedFileName = Path.GetFileName(file.FileName);
+                    using (var stream = file.OpenReadStream())
                     {
-                        _logger.LogInformation("Tag:{tagName} -> {tagValue}", tag.Name, tag.GetValue(tfile.Tag));
+                        var tfile = TagLib.File.Create(new FileAbstraction(untrustedFileName, stream));
+                        foreach (var tag in tfile.Tag.GetType().GetProperties().Where(p => p.GetGetMethod() != null))
+                        {
+                            _logger.LogInformation("Tag:{tagName} -> {tagValue}", tag.Name, tag.GetValue(tfile.Tag));
+                        }
                     }
                 }
+                RedirectToAction("Index");
             }
-            return View();
+            return View(viewName: "Index");
         }
     }
     public class FileAbstraction : TagLib.File.IFileAbstraction
