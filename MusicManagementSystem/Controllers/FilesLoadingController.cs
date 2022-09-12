@@ -11,7 +11,6 @@ namespace MusicManagementSystem.Controllers
         {
             _logger = logger;
         }
-        // GET: FilesLoadingController
         public IActionResult Index(IFormFile[] files)
         {
             foreach (var file in files)
@@ -23,10 +22,9 @@ namespace MusicManagementSystem.Controllers
                     var tfile = TagLib.File.Create(new FileAbstraction(untrustedFileName, stream));
                     foreach (var tag in tfile.Tag.GetType().GetProperties().Where(p => p.GetGetMethod() != null))
                     {
-                        _logger.LogInformation("Tag:{tagName} -> {tagValue}", tag.Name, tag.GetValue(tfile));
+                        _logger.LogInformation("Tag:{tagName} -> {tagValue}", tag.Name, tag.GetValue(tfile.Tag));
                     }
                 }
-
             }
             return View();
         }
