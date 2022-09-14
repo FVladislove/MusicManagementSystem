@@ -1,0 +1,15 @@
+﻿@model FileUploadViewModel
+@{
+    ViewData["Title"] = "View";
+}
+
+<form method="post" enctype="multipart/form-data"
+      asp-controller="FilesLoading"
+      asp-action="UploadMusic">
+
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input asp-for="FormFileCollection" multiple />
+    <span asp-validation-for="FormFileCollection" class="text-danger"></span>
+    <button type="submit" value="Upload">Upload</button>
+</form>
+
