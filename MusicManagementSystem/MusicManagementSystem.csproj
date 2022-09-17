@@ -13,7 +13,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Data\Samples\SongModel\" />
     <Folder Include="wwwroot\scss\" />
   </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties detach-wasted_1json__JsonSchema="https://appsemble.app/api.json" detach-wasted_1mp3_1json__JsonSchema="https://appliedengdesign.github.io/cnccodes-json-schema/draft/2022-07/schema" hed-p-e-renegade_1json__JsonSchema="https://appsemble.app/api.json" /></VisualStudio></ProjectExtensions>
 
 </Project>

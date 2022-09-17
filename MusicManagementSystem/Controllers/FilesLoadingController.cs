@@ -2,6 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MusicManagementSystem.ViewModels.FileLoading;
+using NuGet.Packaging.Signing;
+using NuGet.Protocol;
+using System.Collections;
+using System.Text;
+using System.Text.Json;
+using System.Text.RegularExpressions;
 
 namespace MusicManagementSystem.Controllers
 {
@@ -20,16 +26,22 @@ namespace MusicManagementSystem.Controllers
         public IActionResult UploadMusic(FileUploadViewModel fileUploadViewModel)
         {
             if (ModelState.IsValid)
-            {
+            {   
                 foreach (var file in fileUploadViewModel.FormFileCollection)
                 {
                     _logger.LogInformation("Uploaded file {filename}", file.FileName);
                     _logger.LogInformation("SIZE {length}", file.Length / 1_048_576);
                     string untrustedFileName = Path.GetFileName(file.FileName);
+
                     using (var stream = file.OpenReadStream())
                     {
                         var tfile = TagLib.File.Create(new FileAbstraction(untrustedFileName, stream));
-                        foreach (var tag in tfile.Tag.GetType().GetProperties().Where(p => p.GetGetMethod() != null))
+                        var tags = tfile.Tag
+                            .GetType()
+                            .GetProperties()
+                            .Where(p => p.GetSetMethod() != null);
+
+                        foreach (var tag in tags)
                         {
                             _logger.LogInformation("Tag:{tagName} -> {tagValue}", tag.Name, tag.GetValue(tfile.Tag));
                         }
@@ -58,6 +70,23 @@ namespace MusicManagementSystem.Controllers
         public void CloseStream(Stream stream)
         {
             stream.Close();
+        }
+    }
+
+    public static class FileLoadingUtils
+    {
+        // this function was used for generating json samples from mp3 files
+        public static void DumpTagLibTagProperties(string filename, TagLib.Tag tag)
+        {
+            string jsonStr = JsonSerializer.Serialize(tag, new JsonSerializerOptions
+            {
+                IgnoreReadOnlyFields = true,
+                IgnoreReadOnlyProperties = true,
+                NumberHandling = System.Text.Json.Serialization.JsonNumberHandling.AllowNamedFloatingPointLiterals,
+                WriteIndented = true,
+            });
+
+            File.WriteAllText(filename + ".json", Regex.Unescape(jsonStr), Encoding.UTF8);
         }
     }
 }

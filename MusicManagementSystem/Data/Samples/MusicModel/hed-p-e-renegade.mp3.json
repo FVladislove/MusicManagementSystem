@@ -1,0 +1,58 @@
+﻿{
+  "Title": "Renegade",
+  "TitleSort": null,
+  "Subtitle": null,
+  "Description": null,
+  "Performers": [
+    "(hed) p.e."
+  ],
+  "PerformersSort": [],
+  "PerformersRole": [
+    null
+  ],
+  "AlbumArtists": [],
+  "AlbumArtistsSort": [],
+  "Composers": [],
+  "ComposersSort": [],
+  "Album": "The Best Of",
+  "AlbumSort": null,
+  "Comment": "alterportal.ru",
+  "Genres": [
+    "Rock"
+  ],
+  "Year": 2013,
+  "Track": 2,
+  "TrackCount": 0,
+  "Disc": 0,
+  "DiscCount": 0,
+  "Lyrics": null,
+  "Grouping": null,
+  "BeatsPerMinute": 0,
+  "Conductor": null,
+  "Copyright": null,
+  "DateTagged": null,
+  "MusicBrainzArtistId": null,
+  "MusicBrainzReleaseGroupId": null,
+  "MusicBrainzReleaseId": null,
+  "MusicBrainzReleaseArtistId": null,
+  "MusicBrainzTrackId": null,
+  "MusicBrainzDiscId": null,
+  "MusicIpId": null,
+  "AmazonId": null,
+  "MusicBrainzReleaseStatus": null,
+  "MusicBrainzReleaseType": null,
+  "MusicBrainzReleaseCountry": null,
+  "ReplayGainTrackGain": "NaN",
+  "ReplayGainTrackPeak": "NaN",
+  "ReplayGainAlbumGain": "NaN",
+  "ReplayGainAlbumPeak": "NaN",
+  "InitialKey": null,
+  "RemixedBy": null,
+  "Publisher": "Suburban Noize",
+  "ISRC": null,
+  "Length": "208666",
+  "Pictures": [],
+  "Artists": [
+    "(hed) p.e."
+  ]
+}
