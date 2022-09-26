@@ -3,6 +3,13 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
+builder.Configuration.AddJsonFile(
+    new MusicManagementSystem.Services.GoogleCloudKMSEncryptedFileProvider(),
+    "appsecrets.json.encrypted",
+    optional: true, reloadOnChange: false);
+builder.Services.Configure<MusicManagementSystem.Models.AppSecretsModel>(
+    builder.Configuration.GetSection("Secrets"));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
