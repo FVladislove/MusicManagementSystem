@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using MusicManagementSystem.Data;
 using MusicManagementSystem.Models.NotMapped;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,9 +15,14 @@ builder.Configuration.AddJsonFile(
 builder.Services.Configure<AppSecretsModel>(
     builder.Configuration.GetSection("Secrets"));
 
+var connectionString = builder.Configuration.GetSection("Secrets").GetConnectionString("MusicManagementSystemContext")
+    ?? throw new InvalidOperationException("Connection string 'MusicManagementSystemContext' not found.");
+
 builder.Services.AddDbContext<MusicManagemetSystemDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetSection("Secrets").GetConnectionString("MusicManagementSystemContext")
-    ?? throw new InvalidOperationException("Connection string 'MusicManagementSystemContext' not found.")));
+    options.UseSqlServer(connectionString));
+
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddEntityFrameworkStores<MusicManagemetSystemDbContext>();
 
 
 var app = builder.Build();
@@ -33,11 +39,13 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseAuthentication();;
 
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapRazorPages();
 
 app.Run();
