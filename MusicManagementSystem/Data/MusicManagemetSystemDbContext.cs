@@ -1,10 +1,11 @@
 ﻿using Google.Cloud.Kms.V1;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using MusicManagementSystem.Models;
 
 namespace MusicManagementSystem.Data
 {
-    public class MusicManagemetSystemDbContext : DbContext
+    public class MusicManagemetSystemDbContext : IdentityDbContext
     {
         public MusicManagemetSystemDbContext(DbContextOptions options) : base(options)
         {
