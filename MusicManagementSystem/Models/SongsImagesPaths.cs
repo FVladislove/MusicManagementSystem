@@ -6,6 +6,6 @@
         public Songs Song { get; set; }
 
         public int ImagePathId { get; set; }
-        public ImagesPaths ImagesPaths { get; set; }
+        public ImagesPaths ImagePath { get; set; }
     }
 }
