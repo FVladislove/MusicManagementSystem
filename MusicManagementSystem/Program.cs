@@ -1,3 +1,7 @@
+using Microsoft.EntityFrameworkCore;
+using MusicManagementSystem.Data;
+using MusicManagementSystem.Models.NotMapped;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -7,8 +11,13 @@ builder.Configuration.AddJsonFile(
     new MusicManagementSystem.Services.GoogleCloudKMSEncryptedFileProvider(),
     "appsecrets.json.encrypted",
     optional: true, reloadOnChange: false);
-builder.Services.Configure<MusicManagementSystem.Models.AppSecretsModel>(
+builder.Services.Configure<AppSecretsModel>(
     builder.Configuration.GetSection("Secrets"));
+
+builder.Services.AddDbContext<MusicManagemetSystemDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetSection("Secrets").GetConnectionString("MusicManagementSystemContext")
+    ?? throw new InvalidOperationException("Connection string 'MusicManagementSystemContext' not found.")));
+
 
 var app = builder.Build();
 

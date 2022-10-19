@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MusicManagementSystem.Models;
+using MusicManagementSystem.Models.NotMapped;
 using System.Diagnostics;
 
 namespace MusicManagementSystem.Controllers

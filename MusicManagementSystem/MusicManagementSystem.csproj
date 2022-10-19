@@ -7,12 +7,19 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="Data\Samples\SongModel\**" />
+	  <Content Remove="Data\Samples\SongModel\**" />
+	  <EmbeddedResource Remove="Data\Samples\SongModel\**" />
+	  <None Remove="Data\Samples\SongModel\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Google.Cloud.Kms.V1" Version="3.0.0" />
 		<PackageReference Include="Google.Cloud.Storage.V1" Version="4.1.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.9" />
-		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.9" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.9" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.9">
+		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.10" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.10" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.10" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.10">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
@@ -21,7 +28,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="Data\Samples\SongModel\" />
 		<Folder Include="wwwroot\scss\" />
 	</ItemGroup>
 

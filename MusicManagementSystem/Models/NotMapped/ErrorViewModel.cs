@@ -1,5 +1,8 @@
-namespace MusicManagementSystem.Models
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace MusicManagementSystem.Models.NotMapped
 {
+    [NotMapped]
     public class ErrorViewModel
     {
         public string? RequestId { get; set; }
