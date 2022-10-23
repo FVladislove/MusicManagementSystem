@@ -1,7 +1,10 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using MusicManagementSystem.Data;
-using MusicManagementSystem.Models.NotMapped;
-using Microsoft.AspNetCore.Identity;
+using MusicManagementSystem.Models.NotMapped.SecretsModels;
+using MusicManagementSystem.Services;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,21 +12,69 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
 builder.Configuration.AddJsonFile(
-    new MusicManagementSystem.Services.GoogleCloudKMSEncryptedFileProvider(),
+    new GoogleCloudKMSEncryptedFileProvider(),
     "appsecrets.json.encrypted",
     optional: true, reloadOnChange: false);
-builder.Services.Configure<AppSecretsModel>(
-    builder.Configuration.GetSection("Secrets"));
 
-var connectionString = builder.Configuration.GetSection("Secrets").GetConnectionString("MusicManagementSystemContext")
+// Add secrets configurations
+// TODO think about changing this code to add manually with class bindings
+//var secretsModelsInstances = from t in Assembly.GetExecutingAssembly().GetTypes()
+//                             where t.GetInterfaces().Contains(typeof(ISecretsModel))
+//                             where t.GetInterfaces().Contains(typeof(IStaticType))
+//                             && t.GetConstructor(Type.EmptyTypes) != null
+//                             select Activator.CreateInstance(t) as ISecretsModel;
+
+//foreach (var secretModel in secretsModelsInstances)
+//{
+//    var sectionName = secretModel.SectionName;
+//    var secretModelWithGetStaticType = secretModel as IStaticType;
+//    if (secretModelWithGetStaticType != null)
+//    {
+//        var bindedGoogleAuth = builder.Services.BuildServiceProvider().GetService<IConfiguration>();
+//        var baseConfigMethod = typeof(IServiceCollection).GetMethod("Configure", new Type[] {secretModelWithGetStaticType.GetStaticType});//, new Type[] { secretModelWithGetStaticType.GetStaticType });
+//        if (baseConfigMethod != null)
+//        {
+//            var resultMethod = baseConfigMethod.MakeGenericMethod(secretModelWithGetStaticType.GetStaticType);
+//            resultMethod.Invoke(null, new[] { builder.Configuration.GetSection(sectionName) });
+//        }
+//    }
+//}
+
+//TODO think about model creating and binding
+// =================================================================================================================================
+var connectionStringModel = new ConnectionStringsModel();
+var connectionStringModelBinded = builder.Configuration.GetSection(connectionStringModel.SectionName).Get<ConnectionStringsModel>();
+var connectionString = connectionStringModelBinded.MusicManagementSystemContext
     ?? throw new InvalidOperationException("Connection string 'MusicManagementSystemContext' not found.");
+
+var sendGridModel = new SendGridModel();
+builder.Services.Configure<SendGridModel>(
+    builder.Configuration.GetSection(sendGridModel.SectionName));
+
+var googleAuthModel = new GoogleAuthModel();
+builder.Services.Configure<GoogleAuthModel>(
+    builder.Configuration.GetSection(googleAuthModel.SectionName));
+// =================================================================================================================================
+
+//var connectionString = builder.Configuration
+//.GetConnectionString("MusicManagementSystemContext")
+//    // or
+//    //.GetSection(ConnectionStringsModel.SectionName)["MusicManagementSystemContext"]
+//    ?? throw new InvalidOperationException("Connection string 'MusicManagementSystemContext' not found.");
 
 builder.Services.AddDbContext<MusicManagemetSystemDbContext>(options =>
     options.UseSqlServer(connectionString));
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<MusicManagemetSystemDbContext>();
 
+builder.Services.AddAuthentication().AddGoogle(googleOptions =>
+{
+    googleOptions.ClientId = builder.Configuration.GetSection(googleAuthModel.SectionName)["ClientId"];
+    googleOptions.ClientSecret = builder.Configuration.GetSection(googleAuthModel.SectionName)["ClientSecret"];
+});
+
+builder.Services.AddTransient<IEmailSender, EmailSender>();
 
 var app = builder.Build();
 
@@ -39,7 +90,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-app.UseAuthentication();;
+app.UseAuthentication(); ;
 
 app.UseAuthorization();
 
