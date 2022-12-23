@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using MusicManagementSystem.Data;
+using MusicManagementSystem.Services.CloudStorage;
 using MusicManagementSystem.ViewModels.FileLoading;
 using System.Collections;
 using System.Text;
@@ -12,9 +14,16 @@ namespace MusicManagementSystem.Controllers
     public class FilesLoadingController : Controller
     {
         private readonly ILogger<FilesLoadingController> _logger;
-        public FilesLoadingController(ILogger<FilesLoadingController> logger)
+        private readonly MusicManagemetSystemDbContext _context;
+        private readonly ICloudStorage _cloudStorage;
+
+        public FilesLoadingController(ILogger<FilesLoadingController> logger,
+            MusicManagemetSystemDbContext context,
+            ICloudStorage cloudStorage)
         {
             _logger = logger;
+            _context = context;
+            _cloudStorage = cloudStorage;
         }
         public IActionResult Index()
         {

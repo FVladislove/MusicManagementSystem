@@ -21,6 +21,10 @@ namespace MusicManagementSystem.Models
         public string? Lyrics { get; set; }
 
         public int? Length { get; set; }
+        public string SongFilePath { get; set; }
+
+        [NotMapped]
+        public virtual IFormFile SongFile { get; set; }
 
         public virtual IList<SongsArtists>? SongsArtistsPairs { get; set; }
 

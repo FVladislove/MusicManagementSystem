@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using MusicManagementSystem.Data;
 using MusicManagementSystem.Models.NotMapped.SecretsModels;
 using MusicManagementSystem.Services;
+using MusicManagementSystem.Services.CloudStorage;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -71,6 +72,8 @@ builder.Services.AddAuthentication().AddGoogle(googleOptions =>
 });
 
 builder.Services.AddTransient<IEmailSender, EmailSender>();
+
+builder.Services.AddSingleton<ICloudStorage, GoogleCloudStorage>();
 
 var app = builder.Build();
 
